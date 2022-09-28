@@ -1,0 +1,20 @@
+import "tfplan-functions" as plan
+import "strings" 
+#variable I created 
+allowed_rotation = "7776000s"
+
+//This value only takes in seconds format 
+
+allserviceaccounts = plan.find_resources("google_kms_crypto_key")
+
+//rotate = plan.evaluate_attribute("google_kms_crypto_key", "rotation_period")
+//print(rotate)
+violatingServiceaccount = plan.filter_attribute_not_in_list(allserviceaccounts, "rotation_period", allowed_rotation, true)
+//plan.filter_attribute_greater_than_value(allserviceaccounts, "rotation_period", allowed_rotation, true)
+//int(strings.trim_suffix("rotation_period", "s"))
+
+violations = length(violatingServiceaccount["messages"]) 
+
+main = rule {
+  violations is 0
+}
